@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "~=6.2.2"
+requests = "2.25.1"
+
+[packages]
+pydantic = "~=1.6.1"
+uvicorn = "~=0.13.4"
+fastapi = "~=0.63.0"
+
+[requires]
+python_version = "3.9"
+
+[scripts]
+start = "uvicorn main:api --reload"
+test = "pytest"
