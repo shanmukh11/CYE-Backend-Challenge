@@ -1,7 +1,7 @@
-# 📧 CYE Backend Challenge - Email Server
+# 📧 CYE Backend Challenge - Email Server (Submitted by Shanmukh Swaroop Srinivas)
 
-In this task, you will use Python, [FastAPI], and [SQLite3] to create an email
-microservice. Your API present a JSON interface to let us create, read,
+In this task, Python, [FastAPI], and [SQLite3] are used to create an email
+microservice. This API presents a JSON interface to let us create, read,
 update, and destroy email objects in a local database.
 
 <!-- MarkdownTOC autolink="true" style="ordered" -->
@@ -50,32 +50,60 @@ Here is an example as JSON.
     "subject": "CYE Interview Challenge",
     "sender": "johndoe@umass.edu",
     "recipient": "you@umass.edu",
-    "has_attachments": true,
+    "has_attachments": 1,
     "created": "2021-03-15 14:31:32.733388"
 }
 ```
 
-See the [starter code](./main.py) for an example as a Python `dict`.
-
 ## API Specification
 
-You will need to implement the following endpoints in your API. Implementation
-details are mostly up to you, but make sure to consider [status codes] for
-both success and error cases. Make sure you document your choices!
-
-Your API should use a local SQLite database called `email.db`. We
-recommend using the [Python `sqlite3` module][sqlite3]. It handles the
-connection and lets you write queries without external dependencies. The
-documentation shows you everything you need to know.
+This API uses a local SQLite database called [`email.db`](./email.db).
 
 ##### GET `/emails`
 
-Get an array of all emails in the database.
+Gets an array of all emails in the database. It is also sorted in the descending order of created time. (Newest first)
+
+Sample output JSON:
+
+```json
+[
+    {
+        "id": 2,
+        "body": "Second body",
+        "subject": "Test subject",
+        "sender": "johndoe123@umass.edu",
+        "recipient": "you123@umass.edu",
+        "has_attachments": 0,
+        "created": "2021-03-16 14:31:32.733388"
+    },
+    {
+        "id": 1,
+        "body": "Good luck!",
+        "subject": "CYE Interview Challenge",
+        "sender": "johndoe@umass.edu",
+        "recipient": "you@umass.edu",
+        "has_attachments": 1,
+        "created": "2021-03-15 14:31:32.733388"
+    }
+]
+```
 
 ##### POST `/emails`
 
-Create one new email with given info, auto-assign it an ID, and save it to the
-database. Remember to set the `created` time.
+Creates one new email with given info, auto-assigns it an ID, and saves it to the
+database. `created` time is set automatically.
+
+Sample input JSON:
+
+```json
+{
+    "body": "Third body",
+    "subject": "Random subject",
+    "sender": "mikeoliver@umass.edu",
+    "recipient": "jack@umass.edu",
+    "has_attachments": 0
+}
+```
 
 ##### GET `/emails/{id:int}`
 
@@ -83,27 +111,57 @@ Get the email from the database with primary key `id`. Note that `{id:int}` is
 a placeholder for an integer value. GET `/email/1` would try to get the email
 with ID 1.
 
+Sample output JSON for GET `/emails/2`:
+
+```json
+{
+    "id": 2,
+    "body": "Second body",
+    "subject": "Test subject",
+    "sender": "johndoe123@umass.edu",
+    "recipient": "you123@umass.edu",
+    "has_attachments": 0,
+    "created": "2021-03-16 14:31:32.733388"
+}
+```
 ##### PATCH `/emails/{id:int}`
 
-Update writable fields on the email with the given ID. A request to this
+Updates writable fields on the email with the given ID. A request to this
 endpoint might look like this. The endpoint would update the fields specified
-in the body.
+in the body. 
+
+Sample output JSON for PATCH `/emails/2`:
 
 ```json
 {
     "sender": "janedoe@umass.edu",
-    "has_attachments": false
+    "has_attachments": 1
 }
 ```
 
+Sample output JSON for GET `/emails/2` after PATCH:
+
+```json
+{
+    "id": 2,
+    "body": "Second body",
+    "subject": "Test subject",
+    "sender": "janedoe@umass.edu",
+    "recipient": "you123@umass.edu",
+    "has_attachments": 1,
+    "created": "2021-03-16 14:31:32.733388"
+}
+```
+
+
 ##### DELETE `/emails/{id:int}`
 
-Delete the email with the given ID.
+Deletes the email with the given ID.
+
 
 ## Environment Setup
 
-You will need a recent (3.7+) version of Python for this challenge. The
-starter code uses [Pipenv] for dependency and script management. The following
+You will need a recent (3.7+) version of Python for this challenge. The code uses [Pipenv] for dependency and script management. The following
 should be enough to set up and enter a development environment:
 
 ```sh
@@ -140,15 +198,11 @@ $ pipenv run test
 
 ## Optional: Bonus Tasks
 
-If you are interested in our tech stack, feel free to explore any of the
-following tasks. Not doing these tasks will not have any adverse effects on
-your submission. The tasks are listed roughly in order of difficulty.
-
-- Disallow newline (`\n`) characters in the `subject` field.
-- Add email format validation for the `sender` and `recipient` fields.
+- Disallow newline (`\n`) characters in the `subject` field - Done
+- Add email format validation for the `sender` and `recipient` fields - Done
 - Use SQLAlchemy instead of directly using the SQLite3 module.
-- Sort the result of GET `/emails` by created date (newest first).
-- Add the following query parameters to GET `/emails`:
+- Sort the result of GET `/emails` by created date (newest first). - Done
+- Add the following query parameters to GET `/emails`: - Done
     - `/emails?sender=X`: Emails sent by `X`.
     - `/emails?recipient=X`: Emails received by `X`.
     - `/emails?before=X`: Emails created before date `X`.
